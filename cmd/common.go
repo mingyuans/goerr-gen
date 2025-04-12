@@ -1,7 +1,9 @@
-package main
+package cmd
 
-import "io/ioutil"
+import (
+	"os"
+)
 
 func writeToFile(src []byte, outputName string) error {
-	return ioutil.WriteFile(outputName, src, 0600)
+	return os.WriteFile(outputName, src, 0600)
 }

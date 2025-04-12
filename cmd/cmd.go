@@ -1,13 +1,6 @@
-// Copyright 2020 Lingfei Kong <colin404@foxmail.com>. All rights reserved.
-// Use of this source code is governed by a MIT style
-// license that can be found in the LICENSE file.
-
-// ErrorCodePackage main is a tool to automate the creation of code init function.
-// Inspired by `github.com/golang/tools/cmd/stringer`.
-package main
+package cmd
 
 import (
-	"bytes"
 	"flag"
 	"fmt"
 	"log"
@@ -23,13 +16,9 @@ type Arg struct {
 	DefinedErrorCodeDirectories []string
 }
 
-const (
-	preservePackageName = "code"
-)
-
-// Usage is a replacement usage function for the flags package.
-func Usage() {
-	_, _ = fmt.Fprintf(os.Stderr, "Usage of goerr-gen:\n")
+// usage is a replacement usage function for the flags package.
+func usage() {
+	_, _ = fmt.Fprintf(os.Stderr, "usage of goerr-gen:\n")
 	_, _ = fmt.Fprintf(os.Stderr, "\tgoerr-gen [flags] -type T directries...\n")
 	_, _ = fmt.Fprintf(os.Stderr, "Flags:\n")
 	flag.PrintDefaults()
@@ -42,7 +31,7 @@ func initArg() Arg {
 	flag.StringVar(&arg.TrimPrefix, "trim-prefix", "", "trim the `prefix` from the generated constant names")
 	flag.StringVar(&arg.DocTemplate, "doc-template", "", "the template file of doc")
 
-	flag.Usage = Usage
+	flag.Usage = usage
 	flag.Parse()
 
 	arg.DefinedErrorCodeDirectories = flag.Args()
@@ -64,7 +53,7 @@ func initArg() Arg {
 	return arg
 }
 
-func main() {
+func Run() {
 	log.SetFlags(0)
 	log.SetPrefix("codegen: ")
 
@@ -74,7 +63,7 @@ func main() {
 	var definedErrorCodePackages []ErrorCodePackage
 	for _, directory := range arg.DefinedErrorCodeDirectories {
 		if isDirectory(directory) {
-			codePackages, parseErr := parsePackage(directory)
+			codePackages, parseErr := ParsePackage(directory)
 			if parseErr != nil {
 				log.Fatalf("parse package error: %v", parseErr)
 			}
@@ -106,18 +95,4 @@ func isDirectory(name string) bool {
 	}
 
 	return info.IsDir()
-}
-
-// Generator holds the state of the analysis. Primarily used to buffer
-// the output for format.Source.
-type Generator struct {
-	buf             bytes.Buffer        // Accumulated output.
-	sets            []*ErrorCodePackage // ErrorCodePackage we are scanning.
-	trimPrefix      string
-	codePackagePath string
-}
-
-// Printf like fmt.Printf, but add the string to g.buf.
-func (g *Generator) Printf(format string, args ...interface{}) {
-	_, _ = fmt.Fprintf(&g.buf, format, args...)
 }

@@ -1,4 +1,4 @@
-package main
+package cmd
 
 import (
 	"bytes"
@@ -12,7 +12,8 @@ import (
 )
 
 const (
-	codePackagePath = "github.com/mingyuans/goerr-gen/codegen"
+	codePackagePath     = "github.com/mingyuans/goerr-gen/codegen"
+	preservePackageName = "code"
 )
 
 type codeFileGenerator struct {

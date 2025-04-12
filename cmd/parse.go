@@ -1,4 +1,4 @@
-package main
+package cmd
 
 import (
 	"errors"
@@ -11,7 +11,7 @@ import (
 	"strings"
 )
 
-func parsePackage(direPath string) ([]ErrorCodePackage, error) {
+func ParsePackage(direPath string) ([]ErrorCodePackage, error) {
 	parsedPackages := make([]ErrorCodePackage, 0)
 
 	cfg := &packages.Config{
