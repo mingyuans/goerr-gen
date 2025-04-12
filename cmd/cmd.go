@@ -55,7 +55,7 @@ func initArg() Arg {
 
 func Run() {
 	log.SetFlags(0)
-	log.SetPrefix("codegen: ")
+	log.SetPrefix("goerr-gen: ")
 
 	arg := initArg()
 

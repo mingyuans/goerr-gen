@@ -16,12 +16,12 @@ type Coder interface {
 	Reference() string
 
 	// Code returns the code of the coder
-	Code() int
+	Code() uint32
 }
 
 type errCode struct {
 	// C refers to the code of the errCode.
-	C int
+	C uint32
 
 	// HTTP status that should be used for the associated error code.
 	HTTP int
@@ -45,12 +45,12 @@ func (e errCode) Reference() string {
 	return e.Ref
 }
 
-func (e errCode) Code() int {
+func (e errCode) Code() uint32 {
 	return e.C
 }
 
 // codes contains a map of error codes to metadata.
-var codes = map[int]errCode{}
+var codes = map[uint32]errCode{}
 var codeMux = &sync.Mutex{}
 
 func mustRegister(code errCode) {
@@ -71,7 +71,7 @@ func Register(code uint32, httpStatus int, message string, refs ...string) {
 	}
 
 	coder := errCode{
-		C:    int(code),
+		C:    code,
 		HTTP: httpStatus,
 		Ext:  message,
 		Ref:  reference,
@@ -80,7 +80,7 @@ func Register(code uint32, httpStatus int, message string, refs ...string) {
 	mustRegister(coder)
 }
 
-func GetCode(code int) (Coder, bool) {
+func GetCoder(code uint32) (Coder, bool) {
 	coder, ok := codes[code]
 	return coder, ok
 }
